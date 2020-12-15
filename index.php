@@ -1,9 +1,36 @@
 <?php
-
+//connect to the db
 require_once "includes/database.php";
 
+//check if the form is submitted
+if (isset($_POST['submit'])) {
+    $fname = mysqli_escape_string($db, $_POST['fname']);
+    $lname = mysqli_escape_string($db, $_POST['lname']);
+    $email = mysqli_escape_string($db, $_POST['email']);
+    $personamount = mysqli_escape_string($db, $_POST['personamount']);
+    $bbq = mysqli_escape_string($db, $_POST['bbq']);
 
-$bbq = 1;
+        print_r($_POST);
+
+    $errors = [];
+    if ($fname == "") {
+        $errors[] = 'Voornaam mag niet leeg zijn.';
+    }
+    if ($lname == "") {
+        $errors[] = 'Achternaam mag niet leeg zijn.';
+    }
+    if ($email == "") {
+        $errors[] = 'E-mail mag niet leeg zijn.';
+    }
+    if (!is_numeric($personamount) || $personamount == "") {
+        $errors[] = 'aantal pesonen mag niet leeg zijn, en moet een nummer zijn.';
+    }
+
+    if ($bbq == 0){
+
+    }
+}
+
 mysqli_close($db);
 ?>
 <!doctype html>
@@ -46,8 +73,10 @@ mysqli_close($db);
         <?php if ($bbq == 0) $bbq = '';
         else $bbq = 'checked'?>
         <label for="bbq">wilt u een bbq?</label>
-        <input id="bbq" type="checkbox" name="bbq" <?= $bbq ?>>
-        <span><?= (isset($errors['bbq']) ? $errors['bbq'] : '') ?></span>
+        <select name="bbq" id="bbq">
+            <option value="nee">Nee</option>
+            <option value="ja">Ja</option>
+        </select>
     </div>
     <div class="data-submit">
         <input type="submit" name="submit" value="Save"/>
