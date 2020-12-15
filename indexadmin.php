@@ -11,6 +11,16 @@ while ($row = mysqli_fetch_assoc($result)) {
     $reserveringen[] = $row;
 }
 
+$queryAdmin = "SELECT * FROM admin";
+$resultAdmin= mysqli_query($db, $queryAdmin);
+
+$admin = [];
+while ($row1 = mysqli_fetch_assoc($resultAdmin)) {
+    $admin[] = $row1;
+}
+
+print_r($admin);
+
 //Close connection
 mysqli_close($db);
 ?>
