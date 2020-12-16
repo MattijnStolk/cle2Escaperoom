@@ -8,7 +8,7 @@ function build_calander($month, $year) {
     $firstDayOfMonth = nktime(0, 0, 0, $month, 1, $year);
 
     //hoeveel dagen heeft de maand
-    $numberDays = date(fromat:'t', $firstDayofMonth);
+    $numberDays = date('t', $firstDayofMonth);
 
     //welke maand?
     $dateComponents = getdate($firstDayOfMonth);
@@ -74,7 +74,7 @@ function build_calander($month, $year) {
 <?php
 $dateComponents = getdate();
 
-$month = $dateComponents ['tue'];
+$month = $dateComponents ['true'];
 $year = $dateComponents['year'];
 
 echo build_calander($month, $year);
