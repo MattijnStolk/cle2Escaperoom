@@ -25,10 +25,6 @@ if (isset($_POST['submit'])) {
     if (!is_numeric($personamount) || $personamount == "") {
         $errors[] = 'aantal pesonen mag niet leeg zijn, en moet een nummer zijn.';
     }
-
-    if ($bbq == 0){
-
-    }
 }
 
 mysqli_close($db);
@@ -70,12 +66,10 @@ mysqli_close($db);
         <span><?= (isset($errors['personamount']) ? $errors['personamount'] : '') ?></span>
     </div>
     <div>
-        <?php if ($bbq == 0) $bbq = '';
-        else $bbq = 'checked'?>
         <label for="bbq">wilt u een bbq?</label>
         <select name="bbq" id="bbq">
-            <option value="nee">Nee</option>
-            <option value="ja">Ja</option>
+            <option value="nee" <?php if ($bbq == 'nee') echo 'selected' ?>>Nee</option>
+            <option value="ja" <?php if ($bbq == 'ja') echo 'selected' ?>>Ja</option>
         </select>
     </div>
     <div class="data-submit">
