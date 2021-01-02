@@ -2,31 +2,33 @@
 //connect to the db
 require_once "includes/database.php";
 
+
 //check if the form is submitted
 if (isset($_POST['submit'])) {
     $fname = mysqli_escape_string($db, $_POST['fname']);
     $lname = mysqli_escape_string($db, $_POST['lname']);
     $email = mysqli_escape_string($db, $_POST['email']);
-    $personamount = mysqli_escape_string($db, $_POST['personamount']);
+    $personAmount = mysqli_escape_string($db, $_POST['personamount']);
     $bbq = mysqli_escape_string($db, $_POST['bbq']);
+    $date = date("Y-m-d"); //TIJDELIJK!
+    $time = date("H:i:s"); //TIJDELIJK!
 
-        print_r($_POST);
+        print_r($_POST); echo "<br>";
 
-    $errors = [];
-    if ($fname == "") {
-        $errors[] = 'Voornaam mag niet leeg zijn.';
+    require_once 'includes/errorHandling.php';
+
+    if (empty($errors)){
+        $queryCreate = "INSERT INTO reserveringen (fname, lname, email, date, time, personamount, bbq)
+                        VALUES ('$fname', '$lname', '$email', '$date', '$time', '$personAmount', '$bbq')";
+        $result = mysqli_query($db, $queryCreate)
+        or die('Error: '.$queryCreate .$db -> error);
+
+        echo 'gegevens opgeslagen!';
     }
-    if ($lname == "") {
-        $errors[] = 'Achternaam mag niet leeg zijn.';
-    }
-    if ($email == "") {
-        $errors[] = 'E-mail mag niet leeg zijn.';
-    }
-    if (!is_numeric($personamount) || $personamount == "") {
-        $errors[] = 'aantal pesonen mag niet leeg zijn, en moet een nummer zijn.';
-    }
+
 }
 
+$bbq = "";
 mysqli_close($db);
 ?>
 <!doctype html>
@@ -44,17 +46,17 @@ mysqli_close($db);
 <form action="<?= $_SERVER['REQUEST_URI']; ?>" method="post">
     <div class="data-field">
         <label for="fname">Voornaam</label>
-        <input id="fname" type="text" name="fname" value="<?= (isset($fname) ? $fname : ''); ?>"/>
+        <input id="fname" type="text" name="fname" value="<?= (isset($fname) ? htmlentities($fname) : ''); ?>"/>
         <span><?= (isset($errors['fname']) ? $errors['fname'] : '') ?></span>
     </div>
     <div class="data-field">
         <label for="lname">Achternaam</label>
-        <input id="lname" type="text" name="lname" value="<?= (isset($lname) ? $lname : ''); ?>"/>
+        <input id="lname" type="text" name="lname" value="<?= (isset($lname) ? htmlentities($lname) : ''); ?>"/>
         <span><?= (isset($errors['lname']) ? $errors['lname'] : '') ?></span>
     </div>
     <div class="data-field">
         <label for="email">Email</label>
-        <input id="email" type="email" name="email" value="<?= (isset($email) ? $email : ''); ?>"/>
+        <input id="email" type="email" name="email" value="<?= (isset($email) ? htmlentities($email) : ''); ?>"/>
         <span><?= (isset($errors['email']) ? $errors['email'] : '') ?></span>
     </div>
     <div class="data-field">
@@ -62,13 +64,13 @@ mysqli_close($db);
     </div>
     <div class="data-field">
         <label for="personamount">Aantal personen</label>
-        <input id="personamount" type="number" name="personamount" value="<?= (isset($personamount) ? $personamount : ''); ?>"/>
-        <span><?= (isset($errors['personamount']) ? $errors['personamount'] : '') ?></span>
+        <input id="personamount" type="number" name="personamount" value="<?= (isset($personAmount) ? htmlentities($personAmount) : ''); ?>"/>
+        <span><?= (isset($errors['personAmount']) ? $errors['personAmount'] : '') ?></span>
     </div>
     <div>
         <label for="bbq">wilt u een bbq?</label>
         <select name="bbq" id="bbq">
-            <option value="nee" <?php if ($bbq == 'nee') echo 'selected' ?>>Nee</option>
+            <option value="nee" <?php if ($bbq == 'nee'|| $bbq == "") echo 'selected' ?>>Nee</option>
             <option value="ja" <?php if ($bbq == 'ja') echo 'selected' ?>>Ja</option>
         </select>
     </div>
