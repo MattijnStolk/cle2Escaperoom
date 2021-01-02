@@ -2,15 +2,16 @@
 
 require_once "includes/database.php";
 
-$query = "SELECT * FROM reserveringen";
-$result = mysqli_query($db, $query);
+//connect with the reservervations table
+$queryReservations = "SELECT * FROM reserveringen";
+$resultReservations = mysqli_query($db, $queryReservations);
 
-//Loop through the result to create a custom array
-$reserveringen = [];
-while ($row = mysqli_fetch_assoc($result)) {
-    $reserveringen[] = $row;
+$reservations = [];
+while ($row = mysqli_fetch_assoc($resultReservations)) {
+    $reservations[] = $row;
 }
 
+//connect with the admin table
 $queryAdmin = "SELECT * FROM admin";
 $resultAdmin= mysqli_query($db, $queryAdmin);
 
@@ -18,8 +19,20 @@ $admin = [];
 while ($row1 = mysqli_fetch_assoc($resultAdmin)) {
     $admin[] = $row1;
 }
+//check if the user is an admin
+
+//connect with the availabletimes table
+$queryTimes = "SELECT * FROM availabletimes";
+$resultTimes = mysqli_query($db, $queryTimes);
+
+$availableTimes = [];
+while ($row2 = mysqli_fetch_assoc($resultTimes)){
+    $availableTimes[] = $row2;
+}
 
 print_r($admin);
+echo "<br>";
+print_r($availableTimes);
 
 //Close connection
 mysqli_close($db);
@@ -54,17 +67,15 @@ mysqli_close($db);
         </tr>
         </tfoot>
         <tbody>
-        <?php foreach ($reserveringen as $reservering) { ?>
-                <?php if ($reservering['bbq'] == 0) $reservering['bbq'] = 'nee';
-                        else $reservering['bbq'] = 'ja'?>
+        <?php foreach ($reservations as $reservation) { ?>
             <tr>
-                <td><?= $reservering['id'] ?></td>
-                <td><?= $reservering['fname'] ?> <?= $reservering['lname'] ?></td>
-                <td><?= $reservering['email'] ?></td>
-                <td><?= $reservering['date'] ?></td>
-                <td><?= $reservering['time'] ?></td>
-                <td><?= $reservering['personamount'] ?></td>
-                <td><?= $reservering['bbq'] ?></td>
+                <td><?= $reservation['id'] ?></td>
+                <td><?= $reservation['fname'] ?> <?= $reservation['lname'] ?></td>
+                <td><?= $reservation['email'] ?></td>
+                <td><?= $reservation['date'] ?></td>
+                <td><?= $reservation['time'] ?></td>
+                <td><?= $reservation['personamount'] ?></td>
+                <td><?= $reservation['bbq'] ?></td>
 
             </tr>
         <?php } ?>
