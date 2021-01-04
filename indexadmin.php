@@ -19,7 +19,8 @@ $admin = [];
 while ($row1 = mysqli_fetch_assoc($resultAdmin)) {
     $admin[] = $row1;
 }
-//check if the user is an admin
+//IF not logged in you'll be sent to login.php
+//ELSE access to the site
 
 //connect with the availabletimes table
 $queryTimes = "SELECT * FROM availabletimes";
@@ -29,6 +30,8 @@ $availableTimes = [];
 while ($row2 = mysqli_fetch_assoc($resultTimes)){
     $availableTimes[] = $row2;
 }
+
+
 
 print_r($admin);
 echo "<br>";
@@ -53,11 +56,14 @@ mysqli_close($db);
             <tr>
                 <th>id</th>
                 <th>Naam</th>
+                <th>Type </th>
+                <th>proefduik</th>
                 <th>Email</th>
                 <th>datum</th>
                 <th>tijd</th>
                 <th>aantal personen</th>
                 <th>bbq?</th>
+                <th>Details</th>
                 <th colspan="2"></th>
             </tr>
         </thead>
@@ -66,17 +72,21 @@ mysqli_close($db);
             <td colspan="9">&copy; Reserveringen</td>
         </tr>
         </tfoot>
+<!--Hier komt in plaats van de tabel een calender met de dagen waar afspraken staan, als op de datum klikt krijg je een
+    lijst met de afspraak + achternaam + telnummer + knop naar details pagina.        -->
         <tbody>
         <?php foreach ($reservations as $reservation) { ?>
             <tr>
                 <td><?= $reservation['id'] ?></td>
                 <td><?= $reservation['fname'] ?> <?= $reservation['lname'] ?></td>
+                <td><?= $reservation['type'] ?></td>
+                <td><?=$reservation['proefduik']?></td>
                 <td><?= $reservation['email'] ?></td>
                 <td><?= $reservation['date'] ?></td>
                 <td><?= $reservation['time'] ?></td>
                 <td><?= $reservation['personamount'] ?></td>
                 <td><?= $reservation['bbq'] ?></td>
-
+                <td><a href="details.php/?id=<?=$reservation['id']?>">details</a></td>
             </tr>
         <?php } ?>
         </tbody>
