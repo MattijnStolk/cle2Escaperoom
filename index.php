@@ -1,25 +1,30 @@
 <?php
+/** @var mysqli $db */
 //connect to the db
 require_once "includes/database.php";
 
 
 //check if the form is submitted
 if (isset($_POST['submit'])) {
-    $fname = mysqli_escape_string($db, $_POST['fname']);
-    $lname = mysqli_escape_string($db, $_POST['lname']);
-    $email = mysqli_escape_string($db, $_POST['email']);
-    $personAmount = mysqli_escape_string($db, $_POST['personamount']);
-    $bbq = mysqli_escape_string($db, $_POST['bbq']);
-    $date = date("Y-m-d"); //TIJDELIJK!
-    $time = date("H:i:s"); //TIJDELIJK!
+    $type           = mysqli_escape_string($db, $_POST['type']);
+    $proefduik      = mysqli_escape_string($db, $_POST['proefduik']);
+    $fname          = mysqli_escape_string($db, $_POST['fname']);
+    $lname          = mysqli_escape_string($db, $_POST['lname']);
+    $email          = mysqli_escape_string($db, $_POST['email']);
+    $tel            = mysqli_escape_string($db, $_POST['tel']);
+    $personAmount   = mysqli_escape_string($db, $_POST['personamount']);
+    $bbq            = mysqli_escape_string($db, $_POST['bbq']);
+    $note           = mysqli_escape_string($db, $_POST['note']);
+    $date           = date("Y-m-d"); //TIJDELIJK!
+    $time           = date("H:i:s"); //TIJDELIJK!
 
         print_r($_POST); echo "<br>";
 
     require_once 'includes/errorHandling.php';
 
     if (empty($errors)){
-        $queryCreate = "INSERT INTO reserveringen (fname, lname, email, date, time, personamount, bbq)
-                        VALUES ('$fname', '$lname', '$email', '$date', '$time', '$personAmount', '$bbq')";
+        $queryCreate = "INSERT INTO reserveringen (type, proefduik, fname, lname, email, phone, date, time, personamount, bbq)
+                        VALUES ('$type', '$proefduik', '$fname', '$lname', '$email', '$tel', '$date', '$time', '$personAmount', '$bbq')";
         $result = mysqli_query($db, $queryCreate)
         or die('Error: '.$queryCreate .$db -> error);
 
@@ -28,7 +33,17 @@ if (isset($_POST['submit'])) {
 
 }
 
-$bbq = "";
+if (!isset($proefduik)){
+    $proefduik = '';
+}
+if (!isset($type)){
+    $type = '';
+}
+if (!isset($bbq)){
+    $bbq = '';
+}
+
+//close the db connection
 mysqli_close($db);
 ?>
 <!doctype html>
@@ -45,6 +60,25 @@ mysqli_close($db);
 <!-- Hier komt de agenda met de becschikbare tijden -->
 <form action="<?= $_SERVER['REQUEST_URI']; ?>" method="post">
     <div class="data-field">
+        <label for="type">Wat wilt u boeken?</label>
+        <select name="type" id="type">
+            <option value="" hidden <?php if ($type == '') echo 'selected' ?>>Kies een optie!</option>
+            <option value="escapepool" <?php if ($type == 'escapepool') echo 'selected' ?>>Escapepool</option>
+            <option value="escapepod" <?php if ($type == 'escapepod') echo 'selected' ?>>Escapepod</option>
+            <option value="proefduik" <?php if ($type == 'proefduik') echo 'selected' ?>>Alleen proefduik</option>
+        </select>
+    </div>
+    <?php if (!$type == 'proefduik'){ ?>
+    <div class="data-field">
+        <label for="proefduik">wilt u een proefduik?</label>
+        <select name="proefduik" id="proefduik">
+            <option value="" hidden <?php if ($proefduik == '') echo 'selected' ?>>Kies een optie!</option>
+            <option value="nee" <?php if ($proefduik == 'escapep') echo 'selected' ?>>Nee</option>
+            <option value="ja" <?php if ($proefduik == 'ja') echo 'selected' ?>>Ja</option>
+        </select>
+    </div>
+    <?php } ?>
+    <div class="data-field">
         <label for="fname">Voornaam</label>
         <input id="fname" type="text" name="fname" value="<?= (isset($fname) ? htmlentities($fname) : ''); ?>"/>
         <span><?= (isset($errors['fname']) ? $errors['fname'] : '') ?></span>
@@ -60,6 +94,11 @@ mysqli_close($db);
         <span><?= (isset($errors['email']) ? $errors['email'] : '') ?></span>
     </div>
     <div class="data-field">
+        <label for="tel">Telefoonnummer</label>
+        <input id="tel" type="tel" name="tel" value="<?= (isset($tel) ? htmlentities($tel) : ''); ?>"/>
+        <span><?= (isset($errors['tel']) ? $errors['tel'] : '') ?></span>
+    </div>
+    <div class="data-field">
         <p>agenda met beschikbare datum en tijden</p>
     </div>
     <div class="data-field">
@@ -70,12 +109,19 @@ mysqli_close($db);
     <div>
         <label for="bbq">wilt u een bbq?</label>
         <select name="bbq" id="bbq">
-            <option value="nee" <?php if ($bbq == 'nee'|| $bbq == "") echo 'selected' ?>>Nee</option>
+            <option value="" hidden <?php if ($bbq == '') echo 'selected' ?>>Kies een optie!</option>
+            <option value="nee" <?php if ($bbq == 'nee') echo 'selected' ?>>Nee</option>
             <option value="ja" <?php if ($bbq == 'ja') echo 'selected' ?>>Ja</option>
         </select>
     </div>
+    <label for="note">Heeft u toevoegingen?</label>
+    <input id="note" type="text" name="note" value="<?= (isset($note) ? htmlentities($note) : ''); ?>"/>
+    </div>
     <div class="data-submit">
         <input type="submit" name="submit" value="Save"/>
+    </div>
+    <div>
+        <p><a href="indexadmin.php">indexAdmin</a></p>
     </div>
 </form>
 </body>
