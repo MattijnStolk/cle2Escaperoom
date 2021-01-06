@@ -73,7 +73,7 @@ mysqli_close($db);
         <label for="proefduik">wilt u een proefduik?</label>
         <select name="proefduik" id="proefduik">
             <option value="" hidden <?php if ($proefduik == '') echo 'selected' ?>>Kies een optie!</option>
-            <option value="nee" <?php if ($proefduik == 'escapep') echo 'selected' ?>>Nee</option>
+            <option value="nee" <?php if ($proefduik == 'nee') echo 'selected' ?>>Nee</option>
             <option value="ja" <?php if ($proefduik == 'ja') echo 'selected' ?>>Ja</option>
         </select>
     </div>

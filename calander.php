@@ -5,10 +5,10 @@ function build_calander($month, $year) {
     $daysOfWeek = array('Z','M', 'D','W', 'D', 'V', 'Z');
 
     //wat is de eerste dag van de maand
-    $firstDayOfMonth = nktime(0, 0, 0, $month, 1, $year);
+    $firstDayOfMonth = mktime(0, 0, 0, $month, 1, $year);
 
     //hoeveel dagen heeft de maand
-    $numberDays = date('t', $firstDayofMonth);
+    $numberDays = date('t', $firstDayOfMonth);
 
     //welke maand?
     $dateComponents = getdate($firstDayOfMonth);
