@@ -15,15 +15,12 @@ function build_calander($month, $year) {
     
     $monthName = $dateComponents['month'];
 
-    $daysOfWeek = $dateComponents['wday'];
-
     //tabels maken
     $calendar = '<table class = "calandar">';
     $calendar .= "<caption>$monthName $year</caption>";
     $calendar .= "<tr>";
 
     //tabel headers AKA dagen etc
-
     foreach($daysOfWeek as $day){
         $calendar .= "<th class='header'>$day</th>";
     }
@@ -31,9 +28,11 @@ function build_calander($month, $year) {
     // initiate de dag teller, begin met dag 1
     $currentDay = 1;
 
+    $daysOfWeek = $dateComponents['wday'];
+
     //calander mag maar 7 colums (dagen)
-    if(daysOfWeek > 0) {
-        $calendar .= "<td colspan='$daysOfWeek'>$nbsp;</td>";
+    if($daysOfWeek > 0) {
+        $calendar .= "<td colspan='$daysOfWeek'>&nbsp;</td>";
     }
 
     $month = str_pad($month, 2, "0", STR_PAD_LEFT);
@@ -45,7 +44,6 @@ function build_calander($month, $year) {
                 $daysOfWeek =0;
                 $calendar .= "</tr><tr>";
          }
-    
 
          $currentDayRel = str_pad($currentDay, 2, "0", STR_PAD_LEFT);
 
@@ -60,7 +58,7 @@ function build_calander($month, $year) {
 
     if($daysOfWeek !=7){
         $remainingDays = 7 - $daysOfWeek;
-        $calendar .= "<td colspen='$remainingDays'>$nbsp;<td>";
+        $calendar .= "<td colspan='$remainingDays'>&nbsp;<td>";
     }
 
     $calendar .= "</tr>";
@@ -72,12 +70,33 @@ function build_calander($month, $year) {
 ?>
 
 <?php
+
 $dateComponents = getdate();
 
-$month = $dateComponents ['true'];
+$month = $dateComponents['mon'];
 $year = $dateComponents['year'];
 
 echo build_calander($month, $year);
 ?>
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+<label  for  ="datum" > Datum
+    <input type="date"
+           name="datum"
+           min="2020-01-01"
+           max="2020-12-31"
+           value="">
+    <span class="errors>"
+</label>
+</body>
+</html>
 
 
