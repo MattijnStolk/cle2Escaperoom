@@ -3,11 +3,15 @@
 //connect to the db
 require_once "includes/database.php";
 
+$errors['temp'] = 'temp';
+
 
 //check if the form is submitted
 if (isset($_POST['submit'])) {
+
+
+
     $type           = mysqli_escape_string($db, $_POST['type']);
-    $proefduik      = mysqli_escape_string($db, $_POST['proefduik']);
     $fname          = mysqli_escape_string($db, $_POST['fname']);
     $lname          = mysqli_escape_string($db, $_POST['lname']);
     $email          = mysqli_escape_string($db, $_POST['email']);
@@ -15,16 +19,30 @@ if (isset($_POST['submit'])) {
     $personAmount   = mysqli_escape_string($db, $_POST['personamount']);
     $bbq            = mysqli_escape_string($db, $_POST['bbq']);
     $note           = mysqli_escape_string($db, $_POST['note']);
-    $date           = date("Y-m-d"); //TIJDELIJK!
-    $time           = date("H:i:s"); //TIJDELIJK!
+    $date           = $_POST['date'];
+
+    if ($type == 'proefduik'){
+        $type = '';
+        $proefduik = 'ja';
+    } else {
+        $proefduik  = mysqli_escape_string($db, $_POST['proefduik']);
+    }
 
         print_r($_POST); echo "<br>";
+}
+if (isset($_POST['submit2'])){
+    $email          = mysqli_escape_string($db, $_POST['email']);
+    $time           = mysqli_escape_string($db, $_POST['time']);
+    echo $email;
+    echo "<br>";
 
     require_once 'includes/errorHandling.php';
 
+    unset($errors['temp']);
+
     if (empty($errors)){
-        $queryCreate = "INSERT INTO reserveringen (type, proefduik, fname, lname, email, phone, date, time, personamount, bbq)
-                        VALUES ('$type', '$proefduik', '$fname', '$lname', '$email', '$tel', '$date', '$time', '$personAmount', '$bbq')";
+        $queryCreate = "INSERT INTO reserveringen (type, proefduik, fname, lname, email, phone, date, personamount, bbq, note, time)
+                        VALUES ('$type', '$proefduik', '$fname', '$lname', '$email', '$tel', '$date', '$personAmount', '$bbq', '$note', '$time')";
         $result = mysqli_query($db, $queryCreate)
         or die('Error: '.$queryCreate .$db -> error);
 
@@ -57,6 +75,8 @@ mysqli_close($db);
     <link rel="stylesheet" href="css/styles.css">
 </head>
 <body>
+<?php print_r($errors) ?>
+<?php if (!empty($errors))//{ ?>
 <!-- Hier komt de agenda met de becschikbare tijden -->
 <form action="<?= $_SERVER['REQUEST_URI']; ?>" method="post">
     <div class="data-field">
@@ -98,8 +118,15 @@ mysqli_close($db);
         <input id="tel" type="tel" name="tel" value="<?= (isset($tel) ? htmlentities($tel) : ''); ?>"/>
         <span><?= (isset($errors['tel']) ? $errors['tel'] : '') ?></span>
     </div>
-    <div class="data-field">
-        <p>agenda met beschikbare datum en tijden</p>
+    <div class="calendar">
+        <label  for  ="date" > Datum
+            <input type="date"
+                   name="date"
+                   min="2020-01-01"
+                   max="2020-12-31"
+                   value="<?= isset($date)? $date:''?> ">
+            <span class="errors><?= isset($errors['date'])? $errors['date'] : ''?>"
+        </label>
     </div>
     <div class="data-field">
         <label for="personamount">Aantal personen</label>
@@ -120,6 +147,28 @@ mysqli_close($db);
     <div class="data-submit">
         <input type="submit" name="submit" value="Save"/>
     </div>
+    <?php //} ?>
+
+    <?php if (empty($errors) && isset($_POST['submit'])){ ?>
+    <form action="<?= $_SERVER['REQUEST_URI']; ?>" method="post">
+        <div>
+            <input step="" type="time">
+        </div>
+        <div class="data-submit">
+            <input type="submit" name="submit2" value="Save2"/>
+        </div>
+    </form>
+    <?php } ?>
+
+    <?php if (empty($errors) && isset($_POST['submit2'])){ ?>
+
+    <div>
+        <p>
+            je boeking is geslaagd!
+        </p>
+    </div>
+
+    <?php } ?>
     <div>
         <p><a href="indexadmin.php">indexAdmin</a></p>
     </div>

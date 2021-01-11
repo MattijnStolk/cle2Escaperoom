@@ -88,14 +88,7 @@ echo build_calander($month, $year);
     <title>Document</title>
 </head>
 <body>
-<label  for  ="datum" > Datum
-    <input type="date"
-           name="datum"
-           min="2020-01-01"
-           max="2020-12-31"
-           value="">
-    <span class="errors>"
-</label>
+
 </body>
 </html>
 
