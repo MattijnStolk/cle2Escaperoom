@@ -1,6 +1,13 @@
 <?php
-
+/** @var mysqli $db */
 require_once "includes/database.php";
+
+session_start();
+
+//IF not logged in you'll be sent to login.php
+if (!$_SESSION['username']) {
+    header('Location: login.php');
+}
 
 //connect with the reservervations table
 $queryReservations = "SELECT * FROM reserveringen";
@@ -10,17 +17,6 @@ $reservations = [];
 while ($row = mysqli_fetch_assoc($resultReservations)) {
     $reservations[] = $row;
 }
-
-//connect with the admin table
-$queryAdmin = "SELECT * FROM admin";
-$resultAdmin= mysqli_query($db, $queryAdmin);
-
-$admin = [];
-while ($row1 = mysqli_fetch_assoc($resultAdmin)) {
-    $admin[] = $row1;
-}
-//IF not logged in you'll be sent to login.php
-//ELSE access to the site
 
 //connect with the availabletimes table
 $queryTimes = "SELECT * FROM availabletimes";
@@ -91,5 +87,6 @@ mysqli_close($db);
         <?php } ?>
         </tbody>
     </table>
+<p><a href="logout.php">Logout</a></p>
 </body>
 </html>

@@ -171,6 +171,7 @@ mysqli_close($db);
     <?php } ?>
     <div>
         <p><a href="indexadmin.php">indexAdmin</a></p>
+        <p><a href="login.php">Login</a></p>
     </div>
 </form>
 </body>
