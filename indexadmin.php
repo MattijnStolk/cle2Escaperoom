@@ -19,19 +19,7 @@ while ($row = mysqli_fetch_assoc($resultReservations)) {
 }
 
 //connect with the availabletimes table
-$queryTimes = "SELECT * FROM availabletimes";
-$resultTimes = mysqli_query($db, $queryTimes);
 
-$availableTimes = [];
-while ($row2 = mysqli_fetch_assoc($resultTimes)){
-    $availableTimes[] = $row2;
-}
-
-
-
-print_r($admin);
-echo "<br>";
-print_r($availableTimes);
 
 //Close connection
 mysqli_close($db);
@@ -47,46 +35,50 @@ mysqli_close($db);
     <title>Document</title>
 </head>
 <body>
-    <table>
-        <thead>
+    <p><a href="availableTimes.php?type=escapepod">Beschikbare tijden Escapepod</a></p>
+    <p><a href="availableTimes.php?type=escapepool">Beschikbare tijden Escapepool</a></p>
+    <p><a href="availableTimes.php?type=proefduik">Beschikbare tijden proefduik</a></p>
+        <table>
+            <thead>
+                <tr>
+                    <th>id</th>
+                    <th>Naam</th>
+                    <th>Type </th>
+                    <th>proefduik</th>
+                    <th>Email</th>
+                    <th>datum</th>
+                    <th>tijd</th>
+                    <th>aantal personen</th>
+                    <th>bbq?</th>
+                    <th>Details</th>
+                    <th colspan="2"></th>
+                </tr>
+            </thead>
+            <tfoot>
             <tr>
-                <th>id</th>
-                <th>Naam</th>
-                <th>Type </th>
-                <th>proefduik</th>
-                <th>Email</th>
-                <th>datum</th>
-                <th>tijd</th>
-                <th>aantal personen</th>
-                <th>bbq?</th>
-                <th>Details</th>
-                <th colspan="2"></th>
+                <td colspan="9">&copy; Reserveringen</td>
             </tr>
-        </thead>
-        <tfoot>
-        <tr>
-            <td colspan="9">&copy; Reserveringen</td>
-        </tr>
-        </tfoot>
-<!--Hier komt in plaats van de tabel een calender met de dagen waar afspraken staan, als op de datum klikt krijg je een
-    lijst met de afspraak + achternaam + telnummer + knop naar details pagina.        -->
-        <tbody>
-        <?php foreach ($reservations as $reservation) { ?>
-            <tr>
-                <td><?= $reservation['id'] ?></td>
-                <td><?= $reservation['fname'] ?> <?= $reservation['lname'] ?></td>
-                <td><?= $reservation['type'] ?></td>
-                <td><?=$reservation['proefduik']?></td>
-                <td><?= $reservation['email'] ?></td>
-                <td><?= $reservation['date'] ?></td>
-                <td><?= $reservation['time'] ?></td>
-                <td><?= $reservation['personamount'] ?></td>
-                <td><?= $reservation['bbq'] ?></td>
-                <td><a href="details.php/?id=<?=$reservation['id']?>">details</a></td>
-            </tr>
-        <?php } ?>
-        </tbody>
-    </table>
+            </tfoot>
+    <!--Hier komt in plaats van de tabel een calender met de dagen waar afspraken staan, als op de datum klikt krijg je een
+        lijst met de afspraak + achternaam + telnummer + knop naar details pagina.        -->
+            <tbody>
+            <?php foreach ($reservations as $reservation) {
+                if ($reservation['bbq'] == 0) {$reservation['bbq'] = 'nee';} else {$reservation['bbq'] = 'ja';}?>
+                <tr>
+                    <td><?= $reservation['id'] ?></td>
+                    <td><?= $reservation['fname'] ?> <?= $reservation['lname'] ?></td>
+                    <td><?= $reservation['type'] ?></td>
+                    <td><?=$reservation['proefduik']?></td>
+                    <td><?= $reservation['email'] ?></td>
+                    <td><?= $reservation['date'] ?></td>
+                    <td><?= $reservation['time'] ?></td>
+                    <td><?= $reservation['personamount'] ?></td>
+                    <td><?= $reservation['bbq'] ?></td>
+                    <td><a href="details.php/?id=<?=$reservation['id']?>">details</a></td>
+                </tr>
+            <?php } ?>
+            </tbody>
+        </table>
 <p><a href="logout.php">Logout</a></p>
 </body>
 </html>
