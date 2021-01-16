@@ -1,2 +1,2 @@
 <?php
-header('Location: calendar.php');
+header('Location: index.php');

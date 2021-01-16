@@ -2,7 +2,7 @@
 /** @var mysqli $db */
 // redirect when url does not contain a id
 if(!isset($_GET['id'])) {
-    // redirect to index.php
+    // redirect to old-index.php
     header('Location: indexAdmin.php');
     exit;
 }
@@ -23,7 +23,7 @@ if(mysqli_num_rows($result) == 1)
 }
 else {
     //redirect when db returns no result
-    header('Location: index.php');
+    header('Location: old-index.php');
     exit;
 }
 

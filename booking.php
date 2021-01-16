@@ -1,7 +1,7 @@
 <?php
 
 if (!isset($_GET['day'])){
-    header('Location: calendar.php');
+    header('Location: index.php');
 }
 
 /** @var mysqli $db */

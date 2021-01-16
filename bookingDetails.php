@@ -1,6 +1,6 @@
 <?php
 if (!isset($_GET['time'])){
-    header('Location: calendar.php');
+    header('Location: index.php');
 }
 
 /** @var mysqli $db */
@@ -9,12 +9,16 @@ require_once "includes/database.php";
 
 $errors['temp'] = 'temp';
 
-$time = $_GET['time'];
-$date = $_GET['date'];
-$type = $_GET['type'];
+$time = mysqli_escape_string($db, $_GET['time']);
+$date = mysqli_escape_string($db, $_GET['date']);
+$type = mysqli_escape_string($db, $_GET['type']);
+
+$firstSubmit = false;
 
 //check if the form is submitted
-if (isset($_POST['submit'])) {
+if (isset($_POST['submit']) || $firstSubmit == true) {
+    $firstSubmit = true;
+
     $fname = mysqli_escape_string($db, $_POST['fname']);
     $lname = mysqli_escape_string($db, $_POST['lname']);
     $email = mysqli_escape_string($db, $_POST['email']);
@@ -28,12 +32,12 @@ if (isset($_POST['submit'])) {
     unset($errors['temp']);
 
     if (empty($errors)) {
-        $queryCreate = "INSERT INTO reserveringen (type, proefduik, fname, lname, email, phone, date, personamount, bbq, note, time)
-                        VALUES ('$type', 'temp', '$fname', '$lname', '$email', '$tel', '$date', '$personAmount', '$bbq', '$note', '$time')";
+        $queryCreate = "INSERT INTO reserveringen (type, fname, lname, email, phone, date, personamount, bbq, note, time)
+                        VALUES ('$type', '$fname', '$lname', '$email', '$tel', '$date', '$personAmount', '$bbq', '$note', '$time')";
         $result = mysqli_query($db, $queryCreate)
         or die('Error: ' . $queryCreate . $db->error);
 
-        echo 'gegevens opgeslagen!';
+        header('Location: bookingSucces.php');
     }
 }
 
@@ -63,6 +67,7 @@ mysqli_close($db);
 <body>
 <h1>Boeken <?= $type ?></h1>
 <!-- Hier komt de agenda met de becschikbare tijden -->
+<?php if (!empty($errors) || isset($_POST['submit'])) { ?>
 <form action="<?= $_SERVER['REQUEST_URI']; ?>" method="post">
     <div class="data-field">
         <label for="fname">Voornaam</label>
@@ -97,16 +102,17 @@ mysqli_close($db);
             <option value="1" <?php if ($bbq == '1') echo 'selected' ?>>Ja</option>
         </select>
     </div>
-    <label for="note">Heeft u toevoegingen?</label>
-    <input id="note" type="text" name="note" value="<?= (isset($note) ? htmlentities($note) : ''); ?>"/>
+        <label for="note">Heeft u toevoegingen?</label>
+        <input id="note" type="text" name="note" value="<?= (isset($note) ? htmlentities($note) : ''); ?>"/>
     </div>
     <div class="data-submit">
         <input type="submit" name="submit" value="Opslaan"/>
     </div>
+    <?php } ?>
+</form>
     <div>
         <p><a href="indexadmin.php">indexAdmin</a></p>
         <p><a href="login.php">Login</a></p>
     </div>
-</form>
 </body>
 </html>

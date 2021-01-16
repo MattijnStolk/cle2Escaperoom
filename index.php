@@ -1,69 +1,75 @@
 <?php
-/** @var mysqli $db */
-//connect to the db
-require_once "includes/database.php";
+function build_calander($month, $year) {
+    //array met dagen
+    
+    $daysOfWeek = array('Z','M', 'D','W', 'D', 'V', 'Z');
 
-$errors['temp'] = 'temp';
+    //wat is de eerste dag van de maand
+    $firstDayOfMonth = mktime(0, 0, 0, $month, 1, $year);
 
+    //hoeveel dagen heeft de maand
+    $numberDays = date('t', $firstDayOfMonth);
 
-//check if the form is submitted
-if (isset($_POST['submit'])) {
+    //welke maand?
+    $dateComponents = getdate($firstDayOfMonth);
+    
+    $monthName = $dateComponents['month'];
 
+    //tabels maken
+    $calendar = '<table class = "calandar">';
+    $calendar .= "<caption>$monthName $year</caption>";
+    $calendar .= "<tr>";
 
-
-    $type           = mysqli_escape_string($db, $_POST['type']);
-    $fname          = mysqli_escape_string($db, $_POST['fname']);
-    $lname          = mysqli_escape_string($db, $_POST['lname']);
-    $email          = mysqli_escape_string($db, $_POST['email']);
-    $tel            = mysqli_escape_string($db, $_POST['tel']);
-    $personAmount   = mysqli_escape_string($db, $_POST['personamount']);
-    $bbq            = mysqli_escape_string($db, $_POST['bbq']);
-    $note           = mysqli_escape_string($db, $_POST['note']);
-    $date           = $_POST['date'];
-
-    if ($type == 'proefduik'){
-        $type = '';
-        $proefduik = 'ja';
-    } else {
-        $proefduik  = mysqli_escape_string($db, $_POST['proefduik']);
+    //tabel headers AKA dagen etc
+    foreach($daysOfWeek as $day){
+        $calendar .= "<th class='header'>$day</th>";
     }
 
-        print_r($_POST); echo "<br>";
-}
-if (isset($_POST['submit2'])){
-    $email          = mysqli_escape_string($db, $_POST['email']);
-    $time           = mysqli_escape_string($db, $_POST['time']);
-    echo $email;
-    echo "<br>";
+    // initiate de dag teller, begin met dag 1
+    $currentDay = 1;
 
-    require_once 'includes/errorHandling.php';
+    $daysOfWeek = $dateComponents['wday'];
 
-    unset($errors['temp']);
-
-    if (empty($errors)){
-        $queryCreate = "INSERT INTO reserveringen (type, proefduik, fname, lname, email, phone, date, personamount, bbq, note, time)
-                        VALUES ('$type', '$proefduik', '$fname', '$lname', '$email', '$tel', '$date', '$personAmount', '$bbq', '$note', '$time')";
-        $result = mysqli_query($db, $queryCreate)
-        or die('Error: '.$queryCreate .$db -> error);
-
-        echo 'gegevens opgeslagen!';
+    //calander mag maar 7 colums (dagen)
+    if($daysOfWeek > 0) {
+        $calendar .= "<td colspan='$daysOfWeek'>&nbsp;</td>";
     }
 
-}
+    $month = str_pad($month, 2, "0", STR_PAD_LEFT);
 
-if (!isset($proefduik)){
-    $proefduik = '';
-}
-if (!isset($type)){
-    $type = '';
-}
-if (!isset($bbq)){
-    $bbq = '';
-}
+    while($currentDay <= $numberDays){
+        //zevende column, zaterdag, begitn een nieuwe row
 
-//close the db connection
-mysqli_close($db);
+         if($daysOfWeek == 7){
+                $daysOfWeek =0;
+                $calendar .= "</tr><tr>";
+         }
+
+         $currentDayRel = str_pad($currentDay, 2, "0", STR_PAD_LEFT);
+
+         $date = "$year-$month-$currentDayRel";
+         $calendar .= "<td class='day' rel='$date'><a href='booking.php?year=$year&month=$month&day=$currentDayRel'>$currentDay</a></td";
+
+      
+         $currentDay++;
+         $daysOfWeek++;
+    }
+    //laaste week van de maand fixen
+
+    if($daysOfWeek !=7){
+        $remainingDays = 7 - $daysOfWeek;
+        $calendar .= "<td colspan='$remainingDays'>&nbsp;<td>";
+    }
+
+    $calendar .= "</tr>";
+    $calendar .= "</table>";
+    
+    return $calendar;
+
+}
 ?>
+
+
 <!doctype html>
 <html lang="en">
 <head>
@@ -71,108 +77,19 @@ mysqli_close($db);
     <meta name="viewport"
           content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Escapepool Reserveren</title>
-    <link rel="stylesheet" href="css/styles.css">
+    <title>Document</title>
 </head>
 <body>
-<?php print_r($errors) ?>
-<?php if (!empty($errors))//{ ?>
-<!-- Hier komt de agenda met de becschikbare tijden -->
-<form action="<?= $_SERVER['REQUEST_URI']; ?>" method="post">
-    <div class="data-field">
-        <label for="type">Wat wilt u boeken?</label>
-        <select name="type" id="type">
-            <option value="" hidden <?php if ($type == '') echo 'selected' ?>>Kies een optie!</option>
-            <option value="escapepool" <?php if ($type == 'escapepool') echo 'selected' ?>>Escapepool</option>
-            <option value="escapepod" <?php if ($type == 'escapepod') echo 'selected' ?>>Escapepod</option>
-            <option value="proefduik" <?php if ($type == 'proefduik') echo 'selected' ?>>Alleen proefduik</option>
-        </select>
-    </div>
-    <?php if (!$type == 'proefduik'){ ?>
-    <div class="data-field">
-        <label for="proefduik">wilt u een proefduik?</label>
-        <select name="proefduik" id="proefduik">
-            <option value="" hidden <?php if ($proefduik == '') echo 'selected' ?>>Kies een optie!</option>
-            <option value="nee" <?php if ($proefduik == 'nee') echo 'selected' ?>>Nee</option>
-            <option value="ja" <?php if ($proefduik == 'ja') echo 'selected' ?>>Ja</option>
-        </select>
-    </div>
-    <?php } ?>
-    <div class="data-field">
-        <label for="fname">Voornaam</label>
-        <input id="fname" type="text" name="fname" value="<?= (isset($fname) ? htmlentities($fname) : ''); ?>"/>
-        <span><?= (isset($errors['fname']) ? $errors['fname'] : '') ?></span>
-    </div>
-    <div class="data-field">
-        <label for="lname">Achternaam</label>
-        <input id="lname" type="text" name="lname" value="<?= (isset($lname) ? htmlentities($lname) : ''); ?>"/>
-        <span><?= (isset($errors['lname']) ? $errors['lname'] : '') ?></span>
-    </div>
-    <div class="data-field">
-        <label for="email">Email</label>
-        <input id="email" type="email" name="email" value="<?= (isset($email) ? htmlentities($email) : ''); ?>"/>
-        <span><?= (isset($errors['email']) ? $errors['email'] : '') ?></span>
-    </div>
-    <div class="data-field">
-        <label for="tel">Telefoonnummer</label>
-        <input id="tel" type="tel" name="tel" value="<?= (isset($tel) ? htmlentities($tel) : ''); ?>"/>
-        <span><?= (isset($errors['tel']) ? $errors['tel'] : '') ?></span>
-    </div>
-    <div class="calendar">
-        <label  for  ="date" > Datum
-            <input type="date"
-                   name="date"
-                   min="2020-01-01"
-                   max="2020-12-31"
-                   value="<?= isset($date)? $date:''?> ">
-            <span class="errors><?= isset($errors['date'])? $errors['date'] : ''?>"
-        </label>
-    </div>
-    <div class="data-field">
-        <label for="personamount">Aantal personen</label>
-        <input id="personamount" type="number" name="personamount" value="<?= (isset($personAmount) ? htmlentities($personAmount) : ''); ?>"/>
-        <span><?= (isset($errors['personAmount']) ? $errors['personAmount'] : '') ?></span>
-    </div>
-    <div>
-        <label for="bbq">wilt u een bbq?</label>
-        <select name="bbq" id="bbq">
-            <option value="" hidden <?php if ($bbq == '') echo 'selected' ?>>Kies een optie!</option>
-            <option value="nee" <?php if ($bbq == 'nee') echo 'selected' ?>>Nee</option>
-            <option value="ja" <?php if ($bbq == 'ja') echo 'selected' ?>>Ja</option>
-        </select>
-    </div>
-    <label for="note">Heeft u toevoegingen?</label>
-    <input id="note" type="text" name="note" value="<?= (isset($note) ? htmlentities($note) : ''); ?>"/>
-    </div>
-    <div class="data-submit">
-        <input type="submit" name="submit" value="Save"/>
-    </div>
-    <?php //} ?>
+    <?php
 
-    <?php if (empty($errors) && isset($_POST['submit'])){ ?>
-    <form action="<?= $_SERVER['REQUEST_URI']; ?>" method="post">
-        <div>
-            <input step="" type="time">
-        </div>
-        <div class="data-submit">
-            <input type="submit" name="submit2" value="Save2"/>
-        </div>
-    </form>
-    <?php } ?>
+    $dateComponents = getdate();
 
-    <?php if (empty($errors) && isset($_POST['submit2'])){ ?>
+    $month = $dateComponents['mon'];
+    $year = $dateComponents['year'];
 
-    <div>
-        <p>
-            je boeking is geslaagd!
-        </p>
-    </div>
-
-    <?php } ?>
-    <div>
-        <p><a href="indexadmin.php">indexAdmin</a></p>
-        <p><a href="login.php">Login</a></p>
-    </div>
-</form>
+    echo build_calander($month, $year);
+    ?>
 </body>
 </html>
+
+

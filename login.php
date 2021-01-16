@@ -86,7 +86,7 @@ if (isset($_POST['logout'])) {
     </div>
 </form>
 
-<p><a href="index.php">Terug naar de index.</a></p>
+<p><a href="old-index.php">Terug naar de index.</a></p>
 <p><a href="register.php">Create user</a></p>
 </body>
 </html>
