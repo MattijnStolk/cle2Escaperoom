@@ -42,7 +42,7 @@ if (isset($_POST['submit'])) {
             }
         } else {
             if ($login == false) {
-                $errors['wrongPassOrMail'] = 'je moet wel het goede invullen knaap2';
+                $errors['wrongPassOrMail'] = 'Verkeerde gebruikersnaam of wachtwoord!';
             }
         }
 
@@ -71,6 +71,7 @@ if (isset($_POST['logout'])) {
 
 
 <form method="post" action="<?= $_SERVER['REQUEST_URI']; ?>">
+    <span><?= isset($errors['wrongPassOrMail']) ? $errors['wrongPassOrMail'] : ''?></span>
     <div>
         <label for="username">Gebruikersnaam: </label>
         <input id="username" type="text" name="username"/>

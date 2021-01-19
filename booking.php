@@ -21,19 +21,21 @@ $dateQuery = "$year-$month-$day";
 
 
 
-$query = "SELECT * FROM availabletimes WHERE date = '$dateQuery'";
+$query = "SELECT * FROM availabletimes WHERE date = '$dateQuery' AND open = '1'";
 $result = mysqli_query($db, $query)
-    or die('Error: '. $db -> error);
+    or die('Error: Er zijn geen beschikbare tijden open op deze datum.');
 
 if (mysqli_num_rows($result) == 1) {
     $availableTimes = [];
     while ($row = mysqli_fetch_assoc($result)){
         $availableTimes[] = $row;
+    }} else {
+       die('Er zijn geen beschikbare tijden open op die datum!');
     }
 
     print_r($availableTimes);
 
-}
+
 
 ?>
 <!doctype html>

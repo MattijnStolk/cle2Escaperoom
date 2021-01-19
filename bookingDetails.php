@@ -7,17 +7,12 @@ if (!isset($_GET['time'])){
 //connect to the db
 require_once "includes/database.php";
 
-$errors['temp'] = 'temp';
-
 $time = mysqli_escape_string($db, $_GET['time']);
 $date = mysqli_escape_string($db, $_GET['date']);
 $type = mysqli_escape_string($db, $_GET['type']);
 
-$firstSubmit = false;
-
 //check if the form is submitted
-if (isset($_POST['submit']) || $firstSubmit == true) {
-    $firstSubmit = true;
+if (isset($_POST['submit'])) {
 
     $fname = mysqli_escape_string($db, $_POST['fname']);
     $lname = mysqli_escape_string($db, $_POST['lname']);
@@ -26,20 +21,30 @@ if (isset($_POST['submit']) || $firstSubmit == true) {
     $personAmount = mysqli_escape_string($db, $_POST['personamount']);
     $bbq = mysqli_escape_string($db, $_POST['bbq']);
     $note = mysqli_escape_string($db, $_POST['note']);
+    $personBBQ = mysqli_escape_string($db, $_POST['personBBQ']);
+
+    if ($personBBQ == '' || $personBBQ == ' '){
+        $personBBQ = 0;
+    }
 
     require_once 'includes/errorHandling.php';
 
-    unset($errors['temp']);
-
     if (empty($errors)) {
-        $queryCreate = "INSERT INTO reserveringen (type, fname, lname, email, phone, date, personamount, bbq, note, time)
-                        VALUES ('$type', '$fname', '$lname', '$email', '$tel', '$date', '$personAmount', '$bbq', '$note', '$time')";
-        $result = mysqli_query($db, $queryCreate)
-        or die('Error: ' . $queryCreate . $db->error);
+        $query = "INSERT INTO reserveringen (type, fname, lname, email, phone, date, personamount, bbqperson, bbq, note, time)
+                        VALUES ('$type', '$fname', '$lname', '$email', '$tel', '$date', '$personAmount', '$personBBQ', '$bbq', '$note', '$time')";
+        $result = mysqli_query($db, $query)
+        or die('Error: ' . $query . $db->error . "<br>" . $personBBQ);
+
+        $query = "UPDATE availabletimes
+                      SET open = '0'
+                      WHERE date = '$date' AND time = '$time' AND type = '$type'";
+        $result = mysqli_query($db, $query)
+        or die('Error: ' . $query . $db->error);
 
         header('Location: bookingSucces.php');
     }
 }
+
 
 if (!isset($proefduik)){
     $proefduik = '';
@@ -49,6 +54,10 @@ if (!isset($type)){
 }
 if (!isset($bbq)){
     $bbq = '';
+}
+
+if (!isset($personBBQ)){
+    $personBBQ = 0;
 }
 
 //close the db connection
@@ -63,11 +72,12 @@ mysqli_close($db);
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Escapepool Reserveren</title>
     <link rel="stylesheet" href="css/styles.css">
+
 </head>
 <body>
 <h1>Boeken <?= $type ?></h1>
 <!-- Hier komt de agenda met de becschikbare tijden -->
-<?php if (!empty($errors) || isset($_POST['submit'])) { ?>
+<?php if (!empty($errors) || !isset($_POST['submit'])) { ?>
 <form action="<?= $_SERVER['REQUEST_URI']; ?>" method="post">
     <div class="data-field">
         <label for="fname">Voornaam</label>
@@ -91,7 +101,7 @@ mysqli_close($db);
     </div>
     <div class="data-field">
         <label for="personamount">Aantal personen</label>
-        <input id="personamount" type="number" min="0" max="6" name="personamount" value="<?= (isset($personAmount) ? htmlentities($personAmount) : ''); ?>"/>
+        <input id="personamount" type="number" min="1" max="6" name="personamount" value="<?= (isset($personAmount) ? htmlentities($personAmount) : ''); ?>"/>
         <span><?= (isset($errors['personAmount']) ? $errors['personAmount'] : '') ?></span>
     </div>
     <div>
@@ -102,17 +112,24 @@ mysqli_close($db);
             <option value="1" <?php if ($bbq == '1') echo 'selected' ?>>Ja</option>
         </select>
     </div>
+    <div id="bbqPersons">
+        <label for="personBBQ">Met hoeveel personen wilt u komen bbq?</label>
+        <input type="number" id="personBBQ" name="personBBQ" min="0" max="12" >
+        <span><?= (isset($errors['personBBQ']) ? $errors['personBBQ'] : '') ?></span>
+    </div>
+    <div>
         <label for="note">Heeft u toevoegingen?</label>
         <input id="note" type="text" name="note" value="<?= (isset($note) ? htmlentities($note) : ''); ?>"/>
     </div>
     <div class="data-submit">
         <input type="submit" name="submit" value="Opslaan"/>
     </div>
-    <?php } ?>
 </form>
+    <?php } ?>
     <div>
         <p><a href="indexadmin.php">indexAdmin</a></p>
         <p><a href="login.php">Login</a></p>
     </div>
+<script src="javascript.js"></script>
 </body>
 </html>

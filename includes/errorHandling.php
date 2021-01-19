@@ -12,9 +12,13 @@ if ($email == "") {
 if (!is_numeric($personAmount) || $personAmount == "") {
     $errors['personAmount'] = 'aantal pesonen mag niet leeg zijn en moet een nummer zijn.';
 }
-if ($personAmount < 0 || $personAmount > 6){
+if ($personAmount < 1 || $personAmount > 6){
     $errors['personAmount'] = 'Aantal personen moet binnen 1 en 6 zitten. ';
 }
 if (!is_numeric($tel) || $tel == ""){
     $errors['tel'] = 'Telefoonnummer mag niet leeg zijn en moeten cijfers zijn.';
 };
+
+if ($personBBQ < 0 || $personBBQ > 12){
+    $errors['personBBQ'] = 'Aantal personen van de bbq moet tussen 1 en 12 zitten';
+}

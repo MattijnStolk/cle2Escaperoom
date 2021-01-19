@@ -43,13 +43,14 @@ mysqli_close($db);
                 <tr>
                     <th>id</th>
                     <th>Naam</th>
-                    <th>Type </th>
-                    <th>proefduik</th>
+                    <th>Type</th>
                     <th>Email</th>
                     <th>datum</th>
                     <th>tijd</th>
                     <th>aantal personen</th>
                     <th>bbq?</th>
+                    <th>aantal personen bbq</th>
+                    <th>toevoegingen</th>
                     <th>Details</th>
                     <th colspan="2"></th>
                 </tr>
@@ -62,18 +63,19 @@ mysqli_close($db);
     <!--Hier komt in plaats van de tabel een calender met de dagen waar afspraken staan, als op de datum klikt krijg je een
         lijst met de afspraak + achternaam + telnummer + knop naar details pagina.        -->
             <tbody>
-            <?php foreach ($reservations as $reservation) {
+            <?php foreach ($reservations as $key => $reservation) {
                 if ($reservation['bbq'] == 0) {$reservation['bbq'] = 'nee';} else {$reservation['bbq'] = 'ja';}?>
                 <tr>
-                    <td><?= $reservation['id'] ?></td>
+                    <td><?= $key+1 ?></td>
                     <td><?= $reservation['fname'] ?> <?= $reservation['lname'] ?></td>
                     <td><?= $reservation['type'] ?></td>
-                    <td><?=$reservation['proefduik']?></td>
                     <td><?= $reservation['email'] ?></td>
                     <td><?= $reservation['date'] ?></td>
                     <td><?= $reservation['time'] ?></td>
                     <td><?= $reservation['personamount'] ?></td>
                     <td><?= $reservation['bbq'] ?></td>
+                    <td><?= $reservation['bbqperson'] ?></td>
+                    <td><?= $reservation['note'] ?></td>
                     <td><a href="details.php/?id=<?=$reservation['id']?>">details</a></td>
                 </tr>
             <?php } ?>
