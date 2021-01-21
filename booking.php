@@ -12,10 +12,6 @@ $year = $_GET['year'];
 $month = $_GET['month'];
 $day = $_GET['day'];
 
-echo $year; echo '<br>';
-echo $month; echo '<br>';
-echo $day; echo '<br>';
-
 $dateQuery = "$year-$month-$day";
 
 
@@ -32,8 +28,6 @@ if (mysqli_num_rows($result) == 1) {
     }} else {
        die('Er zijn geen beschikbare tijden open op die datum!');
     }
-
-    print_r($availableTimes);
 
 
 

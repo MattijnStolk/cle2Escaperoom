@@ -71,7 +71,7 @@ mysqli_close($db);
           content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Escapepool Reserveren</title>
-    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="../css/styles.css">
 
 </head>
 <body>
@@ -130,6 +130,6 @@ mysqli_close($db);
         <p><a href="indexadmin.php">indexAdmin</a></p>
         <p><a href="login.php">Login</a></p>
     </div>
-<script src="javascript.js"></script>
+<script src="../js/javascript.js"></script>
 </body>
 </html>
