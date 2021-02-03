@@ -41,7 +41,25 @@ if (isset($_POST['submit'])) {
         $result = mysqli_query($db, $query)
         or die('Error: ' . $query . $db->error);
 
-        header('Location: bookingSucces.php');
+        require_once 'includes/mailerInclude.php';
+
+        try {
+            $body = file_get_contents('./templates/confirm-mail.html');
+            $body = str_replace('{firstName}', "$fname", $body);
+            $body = str_replace('{date}', "$date", $body);
+            $body = str_replace('{time}', "$time", $body);
+
+            $mail->addAddress("$email", "$fname" . ' ' . "$lname");
+            $mail->Subject  = 'Bevestiging reservering Escapepool';
+            $mail->Body     = $body;
+            $mail->AltBody = 'This is the body in plain text for non-HTML mail clients';
+
+            $mail->send();
+            echo "Message has been sent.";
+            header('Location: bookingSucces.php');
+        }catch (Exception $e){
+            echo "Message could not be sent. Mailer Error: {$mail->ErrorInfo}";
+        }
     }
 }
 
@@ -71,7 +89,7 @@ mysqli_close($db);
           content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Escapepool Reserveren</title>
-    <link rel="stylesheet" href="../css/styles.css">
+    <link rel="stylesheet" href="css/styles.css">
 
 </head>
 <body>
@@ -130,6 +148,6 @@ mysqli_close($db);
         <p><a href="indexadmin.php">indexAdmin</a></p>
         <p><a href="login.php">Login</a></p>
     </div>
-<script src="../js/javascript.js"></script>
+<script src="js/javascript.js"></script>
 </body>
 </html>
