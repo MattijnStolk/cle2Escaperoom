@@ -13,7 +13,6 @@ $type = mysqli_escape_string($db, $_GET['type']);
 
 //check if the form is submitted
 if (isset($_POST['submit'])) {
-
     $fname = mysqli_escape_string($db, $_POST['fname']);
     $lname = mysqli_escape_string($db, $_POST['lname']);
     $email = mysqli_escape_string($db, $_POST['email']);
@@ -52,13 +51,13 @@ if (isset($_POST['submit'])) {
             $mail->addAddress("$email", "$fname" . ' ' . "$lname");
             $mail->Subject  = 'Bevestiging reservering Escapepool';
             $mail->Body     = $body;
-            $mail->AltBody = 'This is the body in plain text for non-HTML mail clients';
+            $mail->AltBody = "Beste $fname, uw reservering bij de escapepool staat op $date om $time. Wij kijken er naar uit, we hopen u ook.";
 
             $mail->send();
-            echo "Message has been sent.";
+            sleep(4);
             header('Location: bookingSucces.php');
-        }catch (Exception $e){
-            echo "Message could not be sent. Mailer Error: {$mail->ErrorInfo}";
+        }catch (Exception $e){;
+            die("Message could not be sent. Mailer Error: {$mail->ErrorInfo}");
         }
     }
 }
