@@ -23,7 +23,7 @@ if(mysqli_num_rows($result) == 1)
 }
 else {
     //redirect when db returns no result
-    header('Location: old-index.php');
+    header('Location: index.php');
     exit;
 }
 

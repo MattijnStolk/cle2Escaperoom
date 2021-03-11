@@ -15,7 +15,7 @@ if (isset($_POST['submit'])) {
     $fname          = mysqli_escape_string($db, $_POST['fname']);
     $lname          = mysqli_escape_string($db, $_POST['lname']);
     $email          = mysqli_escape_string($db, $_POST['email']);
-    $tel            = mysqli_escape_string($db, $_POST['tel']);
+    $tel            = mysqli_escape_string($db, $_POST['phone']);
     $personAmount   = mysqli_escape_string($db, $_POST['personamount']);
     $bbq            = mysqli_escape_string($db, $_POST['bbq']);
     $note           = mysqli_escape_string($db, $_POST['note']);
@@ -116,7 +116,7 @@ mysqli_close($db);
     <div class="data-field">
         <label for="tel">Telefoonnummer</label>
         <input id="tel" type="tel" name="tel" value="<?= (isset($tel) ? htmlentities($tel) : ''); ?>"/>
-        <span><?= (isset($errors['tel']) ? $errors['tel'] : '') ?></span>
+        <span><?= (isset($errors['phone']) ? $errors['phone'] : '') ?></span>
     </div>
     <div class="calendar">
         <label  for  ="date" > Datum

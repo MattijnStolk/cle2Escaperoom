@@ -16,7 +16,7 @@ if (isset($_POST['submit'])) {
     $fname = mysqli_escape_string($db, $_POST['fname']);
     $lname = mysqli_escape_string($db, $_POST['lname']);
     $email = mysqli_escape_string($db, $_POST['email']);
-    $tel = mysqli_escape_string($db, $_POST['tel']);
+    $phone = mysqli_escape_string($db, $_POST['phone']);
     $personAmount = mysqli_escape_string($db, $_POST['personamount']);
     $bbq = mysqli_escape_string($db, $_POST['bbq']);
     $note = mysqli_escape_string($db, $_POST['note']);
@@ -30,7 +30,7 @@ if (isset($_POST['submit'])) {
 
     if (empty($errors)) {
         $query = "INSERT INTO reserveringen (type, fname, lname, email, phone, date, personamount, bbqperson, bbq, note, time)
-                        VALUES ('$type', '$fname', '$lname', '$email', '$tel', '$date', '$personAmount', '$personBBQ', '$bbq', '$note', '$time')";
+                        VALUES ('$type', '$fname', '$lname', '$email', '$phone', '$date', '$personAmount', '$personBBQ', '$bbq', '$note', '$time')";
         $result = mysqli_query($db, $query)
         or die('Error: ' . $query . $db->error . "<br>" . $personBBQ);
 
@@ -112,9 +112,9 @@ mysqli_close($db);
         <span><?= (isset($errors['email']) ? $errors['email'] : '') ?></span>
     </div>
     <div class="data-field">
-        <label for="tel">Telefoonnummer</label>
-        <input id="tel" type="tel" name="tel" value="<?= (isset($tel) ? htmlentities($tel) : ''); ?>"/>
-        <span><?= (isset($errors['tel']) ? $errors['tel'] : '') ?></span>
+        <label for="phone">Telefoonnummer</label>
+        <input id="phone" type="tel" name="phone" value="<?= (isset($phone) ? htmlentities($phone) : ''); ?>"/>
+        <span><?= (isset($errors['phone']) ? $errors['phone'] : '') ?></span>
     </div>
     <div class="data-field">
         <label for="personamount">Aantal personen</label>

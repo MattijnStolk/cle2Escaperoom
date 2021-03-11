@@ -6,7 +6,7 @@ session_start();
 
 //IF not logged in you'll be sent to login.php
 if (!$_SESSION['username']) {
-    header('Location: login.php');
+    header('Location: /cle2Escaperoom/login.php');
 }
 
 //connect with the reservervations table
@@ -52,6 +52,8 @@ mysqli_close($db);
                     <th>aantal personen bbq</th>
                     <th>toevoegingen</th>
                     <th>Details</th>
+                    <th>Edit</th>
+                    <th>Delete</th>
                     <th colspan="2"></th>
                 </tr>
             </thead>
@@ -70,6 +72,7 @@ mysqli_close($db);
                     <td><?= $reservation['fname'] ?> <?= $reservation['lname'] ?></td>
                     <td><?= $reservation['type'] ?></td>
                     <td><?= $reservation['email'] ?></td>
+                    <td><?= $reservation['phone'] ?></td>
                     <td><?= $reservation['date'] ?></td>
                     <td><?= $reservation['time'] ?></td>
                     <td><?= $reservation['personamount'] ?></td>
@@ -77,6 +80,8 @@ mysqli_close($db);
                     <td><?= $reservation['bbqperson'] ?></td>
                     <td><?= $reservation['note'] ?></td>
                     <td><a href="details.php/?id=<?=$reservation['id']?>">details</a></td>
+                    <td><a href="edit.php/?id=<?=$reservation['id']?>">edit</a></td>
+                    <td><a href="delete.php/?id=<?=$reservation['id']?>">delete</a></td>
                 </tr>
             <?php } ?>
             </tbody>

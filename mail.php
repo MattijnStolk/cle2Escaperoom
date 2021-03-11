@@ -21,7 +21,7 @@ try {
     $mail->Port         = 587;
 
     $mail->Username     = 'mailescapepool@gmail.com';
-    $mail->Password     = 'St3kk3rd00s';
+    $mail->Password     = '';
 
 
     $mail->setFrom('mailescapepool@gmail.com');

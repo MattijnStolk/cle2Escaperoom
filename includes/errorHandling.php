@@ -15,8 +15,8 @@ if (!is_numeric($personAmount) || $personAmount == "") {
 if ($personAmount < 1 || $personAmount > 6){
     $errors['personAmount'] = 'Aantal personen moet binnen 1 en 6 zitten. ';
 }
-if (!is_numeric($tel) || $tel == ""){
-    $errors['tel'] = 'Telefoonnummer mag niet leeg zijn en moeten cijfers zijn.';
+if (!is_numeric($phone) || $phone == ""){
+    $errors['phone'] = 'Telefoonnummer mag niet leeg zijn en moeten cijfers zijn.';
 };
 
 if ($personBBQ < 0 || $personBBQ > 12){
