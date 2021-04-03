@@ -31,23 +31,19 @@ if (isset($_POST['submit'])) {
 
         if (mysqli_num_rows($result) == 1) {
             $user = mysqli_fetch_assoc($result);
-            print_r($user);
             if (password_verify($password, $user['password'])) {
                 $login = true;
                 $_SESSION['username'] = $username;
                 header('Location: indexAdmin.php');
+                exit();
             }
-            if (isset($errors['nologin'])) {
-                unset($errors['nologin']);
-            }
-        } else {
-            if ($login == false) {
+        } else if ($login == false) {
                 $errors['wrongPassOrMail'] = 'Verkeerde gebruikersnaam of wachtwoord!';
             }
-        }
-
     }
+
 }
+
 
 if (isset($_POST['logout'])) {
     echo 'uitgelogd';
@@ -75,12 +71,12 @@ if (isset($_POST['logout'])) {
     <div>
         <label for="username">Gebruikersnaam: </label>
         <input id="username" type="text" name="username"/>
-        <span class="errors"><?= isset($errors['username']) ? $errors['username'] : '' ?></span>
+        <span class="errors"><?= isset($errors['username']) ? htmlentities($errors['username']) : '' ?></span>
     </div>
     <div>
         <label for="password">Wachtwoord:</label>
         <input id="password" type="password" name="password"/>
-        <span class="errors"><?= isset($errors['password']) ? $errors['password'] : '' ?></span>
+        <span class="errors"><?= isset($errors['password']) ? htmlentities($errors['password']) : '' ?></span>
     </div>
     <div>
         <input type="submit" name="submit" value="Login"/>

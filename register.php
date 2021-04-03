@@ -1,4 +1,10 @@
 <?php
+
+//IF not logged in you'll be sent to login.php
+if (!$_SESSION['username']) {
+    header('Location: /cle2Escaperoom/login.php');
+}
+
 /** @var mysqli $db */
 require_once 'includes/database.php';
 
@@ -23,10 +29,10 @@ if (isset($_POST['submit'])){
         or die('Error: '.$db -> error);
 
         if ($result) {
-            header('Location: login.php');
+            header('Location: /cle2Escaperoom/login.php');
             exit;
         } else {
-            echo 'er ging iets mis';
+            echo 'er ging iets mis, probeer het opnieuw';
         }
     }
 }
@@ -47,12 +53,12 @@ mysqli_close($db);
         <div>
             <label for="username">Gebruikersnaam: </label>
             <input id="username" type="text" name="username"/>
-            <span class="errors"><?= isset($errors['username']) ? $errors['username'] : '' ?></span>
+            <span class="errors"><?= isset($errors['username']) ? htmlentities($errors['username']) : '' ?></span>
         </div>
         <div>
             <label for="password">Wachtwoord:</label>
             <input id="password" type="password" name="password"/>
-            <span class="errors"><?= isset($errors['password']) ? $errors['password'] : '' ?></span>
+            <span class="errors"><?= isset($errors['password']) ? htmlentities($errors['password']) : '' ?></span>
         </div>
         <div>
             <input type="submit" name="submit" value="Register"/>

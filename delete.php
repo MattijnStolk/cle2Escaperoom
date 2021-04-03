@@ -1,9 +1,4 @@
 <?php
-//kijken of je bent ingelogd
-//checken of er een ID is meegegeven
-//reservering verwijderen
-//header terug naar de indexadmin pagina
-
 /** @var mysqli $db */
 require_once "includes/database.php";
 
